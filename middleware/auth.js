@@ -7,8 +7,9 @@ module.exports = function(req, res, next) {
   if (!token) return res.status(401).send("access denied. no token provided");
 
   try {
-    const decode = jwt.verify(token, config.get("jwtPrivateKey"));
-    res.user = decode;
+    res.send("cool");
+    const payload = jwt.verify(token, config.get("jwtPrivateKey"));
+    req.user = payload;
     next();
   } catch (error) {
     winston.error(error.message, "invalid token!");

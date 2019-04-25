@@ -6,10 +6,6 @@ module.exports = function() {
     new winston.transports.File({ filename: "uncaughtExceptions.log" })
   );
 
-  /* process.on("uncaughtException", ex => {
-    winston.error(ex.message);
-  });*/
-
   process.on("unhandledRejection", ex => {
     throw ex;
   });

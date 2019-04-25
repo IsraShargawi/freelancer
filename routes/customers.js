@@ -1,17 +1,18 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth");
 const paramValidator = require("../middleware/validateParamId");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const { Customer, validate } = require("../models/customer");
 
-router.get("/api/customers", async (req, res) => {
+router.get("/", async (req, res) => {
   const customer = await Customer.find().skip(6);
 
   res.send(customer);
 });
 
-router.post("/api/customers", async (req, res) => {
+router.post("/", async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -31,7 +32,7 @@ router.post("/api/customers", async (req, res) => {
     .send(_.pick(customer, ["name", "email"]));
 });
 
-router.delete("/api/customers/:id", paramValidator, async (req, res) => {
+router.delete("/:id", [auth, paramValidator], async (req, res) => {
   const customer = await Customer.findByIdAndRemove(req.params.id);
   res.send(customer);
 });
